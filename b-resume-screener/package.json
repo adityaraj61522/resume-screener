@@ -1,0 +1,26 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "A simple Express server with CORS and Body Parser middleware, following MVC architecture.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "docx": "^9.5.1",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.5.2",
+    "mammoth": "^1.9.1",
+    "multer": "^2.0.2",
+    "pdf-parse": "^1.1.1",
+    "redis": "^5.7.0",
+    "unzipper": "^0.12.3",
+    "uuid": "^11.1.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
