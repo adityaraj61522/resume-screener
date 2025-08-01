@@ -1,4 +1,4 @@
-/b-resume-screener/node_modules
+node_modules
 .vscode
 .DS_Store
 .env
