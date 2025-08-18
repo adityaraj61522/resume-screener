@@ -4,11 +4,16 @@ const path = require('path');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
 const AdmZip = require('adm-zip');
+const { documentQueue, createProcessEntry } = require('./queueService');
 const { v4: uuidv4 } = require('uuid');
-const redisService = require('./redisService');
 
 class DocumentService {
-    async processZipFile(zipFilePath) {
+    async processZipFile(zipFilePath, userEmail) {
+        if (!userEmail) {
+            throw new Error('User email is required');
+        }
+
+        const processId = uuidv4();
         console.log(`Starting to process ZIP file: ${zipFilePath}`);
         const extractPath = path.join(__dirname, '../temp', uuidv4());
 
@@ -18,6 +23,10 @@ class DocumentService {
 
             const extractedFiles = await this.extractZip(zipFilePath, extractPath);
             console.log(`Successfully extracted ${extractedFiles.length} files from ZIP`);
+
+            // Create process entry in Redis
+            const processKey = await createProcessEntry(processId, userEmail, extractedFiles.length);
+            console.log(`Created process entry with ID: ${processId}`);
 
             const results = [];
             for (const filePath of extractedFiles) {
@@ -47,19 +56,22 @@ class DocumentService {
                     }
 
                     if (text) {
-                        const documentId = uuidv4();
-                        console.log(`Storing document in Redis: ${filename}`);
-                        await redisService.storeDocument(documentId, {
-                            filename: filename,
+                        const timestamp = new Date().toISOString();
+                        console.log(`Adding document to processing queue: ${filename}`);
+                        await documentQueue.add({
+                            processId,
+                            userEmail,
+                            filename,
                             content: text,
-                            timestamp: new Date().toISOString()
+                            timestamp,
+                            totalFiles: extractedFiles.length
                         });
-                        console.log(`Successfully stored document in Redis: ${filename} (ID: ${documentId})`);
+                        console.log(`Successfully added document to queue: ${filename}`);
 
                         results.push({
-                            documentId,
                             filename: filename,
-                            status: 'success'
+                            status: 'queued',
+                            timestamp
                         });
                     } else {
                         console.warn(`No text content extracted from file: ${filename}`);
@@ -74,8 +86,15 @@ class DocumentService {
                 }
             }
 
-            console.log(`Processing completed. Success: ${results.filter(r => r.status === 'success').length}, Failures: ${results.filter(r => r.status === 'error').length}`);
-            return results;
+            console.log(`All documents added to queue. Success: ${results.filter(r => r.status === 'queued').length}, Failures: ${results.filter(r => r.status === 'error').length}`);
+
+            return {
+                processId,
+                queued: results.filter(r => r.status === 'queued').length,
+                failed: results.filter(r => r.status === 'error').length,
+                files: results,
+                status: 'pending'
+            };
         } catch (error) {
             console.error('Fatal error during file processing:', error);
             throw error;

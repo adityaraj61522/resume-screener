@@ -35,7 +35,7 @@ class ApiController {
             }
 
             // Using the tempFilePath provided by express-fileupload
-            const results = await documentService.processZipFile(zipFile.tempFilePath);
+            const results = await documentService.processZipFile(zipFile.tempFilePath, req.body.email);
             res.json({
                 message: 'Files processed successfully',
                 results
