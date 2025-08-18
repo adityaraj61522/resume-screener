@@ -13,28 +13,78 @@ const ParticleBackground = () => {
         <Particles
             id="tsparticles"
             options={{
+                fullScreen: {
+                    enable: true,
+                    zIndex: -1
+                },
                 background: {
-                    color: '#0d1117',
+                    color: {
+                        value: ''  // transparent background to let CSS gradient show
+                    },
                 },
                 particles: {
                     color: {
-                        value: '#ffffff',
+                        value: ["#FF1493", "#FF69B4", "#FF0066", "#FF1493"]
                     },
                     links: {
-                        enable: true,
-                        color: '#ffffff',
+                        color: "#FF1493",
                         distance: 150,
+                        enable: true,
+                        opacity: 0.8,
+                        width: 2
+                    },
+                    collisions: {
+                        enable: true
                     },
                     move: {
+                        direction: "none",
                         enable: true,
-                        speed: 2,
-                    },
-                    size: {
-                        value: 1,
+                        outModes: {
+                            default: "bounce"
+                        },
+                        random: false,
+                        speed: 3,
+                        straight: false
                     },
                     number: {
-                        value: 80,
+                        density: {
+                            enable: true
+                        },
+                        value: 100
                     },
+                    opacity: {
+                        value: 0.9
+                    },
+                    shape: {
+                        type: "circle"
+                    },
+                    size: {
+                        value: { min: 2, max: 5 }
+                    }
+                },
+                detectRetina: true,
+                fpsLimit: 120,
+                interactivity: {
+                    detectsOn: "canvas",
+                    events: {
+                        onClick: {
+                            enable: true,
+                            mode: "push"
+                        },
+                        onHover: {
+                            enable: true,
+                            mode: "repulse"
+                        }
+                    },
+                    modes: {
+                        push: {
+                            quantity: 4
+                        },
+                        repulse: {
+                            distance: 100,
+                            duration: 0.4
+                        }
+                    }
                 },
             }}
         />

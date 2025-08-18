@@ -1,26 +1,27 @@
-import { ThemeProvider } from '@primer/react';
+import { Toaster } from 'sonner';
 import ParticleBackground from './components/ParticleBackground';
-import UploadForm from './components/UploadForm';
-import styled from 'styled-components';
-
-const AppContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background-color: #0d1117;
-`;
+import JobApplicationForm from './components/JobApplicationForm';
+import SubmissionHistory from './components/SubmissionHistory';
 
 function App() {
   return (
-    <ThemeProvider colorMode="dark">
-      <AppContainer>
-        <ParticleBackground />
-        <UploadForm />
-      </AppContainer>
-    </ThemeProvider>
+    <div className="min-h-screen bg-transparent py-12 px-4 flex flex-col items-center">
+      <ParticleBackground />
+
+      <div className="relative w-full max-w-4xl flex flex-col items-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-hero text-transparent bg-clip-text animate-fadeIn">
+          Screen Resumes with AI Faster
+        </h1>
+
+        <div className="space-y-6">
+          <JobApplicationForm />
+          <SubmissionHistory />
+        </div>
+      </div>
+
+      <Toaster position="top-right" />
+    </div>
   );
 }
 
-export default App
+export default App;
