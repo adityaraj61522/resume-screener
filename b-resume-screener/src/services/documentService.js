@@ -8,9 +8,12 @@ const { documentQueue, createProcessEntry } = require('./queueService');
 const { v4: uuidv4 } = require('uuid');
 
 class DocumentService {
-    async processZipFile(zipFilePath, userEmail) {
+    async processZipFile(zipFilePath, userEmail, jobDescription) {
         if (!userEmail) {
             throw new Error('User email is required');
+        }
+        if (!jobDescription) {
+            throw new Error('Job description is required');
         }
 
         const processId = uuidv4();
@@ -64,7 +67,8 @@ class DocumentService {
                             filename,
                             content: text,
                             timestamp,
-                            totalFiles: extractedFiles.length
+                            totalFiles: extractedFiles.length,
+                            jobDescription
                         });
                         console.log(`Successfully added document to queue: ${filename}`);
 
@@ -99,10 +103,13 @@ class DocumentService {
             console.error('Fatal error during file processing:', error);
             throw error;
         } finally {
-            console.log(`Cleaning up temporary directory: ${extractPath}`);
+            console.log('Cleaning up temporary files...');
             try {
+                // Delete the temp directory with extracted files
                 await fsp.rm(extractPath, { recursive: true, force: true });
-                console.log('Cleanup completed successfully');
+                // Delete the original ZIP file
+                await fsp.unlink(zipFilePath);
+                console.log('Cleanup completed successfully: Removed temp directory and ZIP file');
             } catch (error) {
                 console.error('Error during cleanup:', error);
             }

@@ -35,7 +35,12 @@ class ApiController {
             }
 
             // Using the tempFilePath provided by express-fileupload
-            const results = await documentService.processZipFile(zipFile.tempFilePath, req.body.email);
+            const { email, jobDescription } = req.body;
+            if (!jobDescription) {
+                return res.status(400).json({ error: 'Job description is required' });
+            }
+
+            const results = await documentService.processZipFile(zipFile.tempFilePath, email, jobDescription);
             res.json({
                 message: 'Files processed successfully',
                 results

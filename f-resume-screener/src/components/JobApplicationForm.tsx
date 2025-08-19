@@ -42,12 +42,12 @@ const JobApplicationForm = () => {
         setIsSubmitting(true);
         try {
             const formDataToSend = new FormData();
-            formDataToSend.append('file', file);
-            formDataToSend.append('fullName', formData.fullName);
+            formDataToSend.append('documents', file);
+            formDataToSend.append('name', formData.fullName);
             formDataToSend.append('email', formData.email);
             formDataToSend.append('jobDescription', formData.jobDescription);
 
-            const response = await fetch('http://localhost:3000/api/upload', {
+            const response = await fetch('http://localhost:5001/api/data', {
                 method: 'POST',
                 body: formDataToSend,
             });
