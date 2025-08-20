@@ -126,7 +126,8 @@ documentQueue.process(async (job) => {
         console.log(`Analysis completed for: ${filename}`);
 
         // Store the analyzed result
-        const documentKey = `document:${userEmail}:${timestamp}`;
+        const safeTimestamp = timestamp.replace(/:/g, '-');
+        const documentKey = `document:${userEmail}:${safeTimestamp}`;
         await redisService.storeDocument(documentKey, {
             filename,
             content,

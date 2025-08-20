@@ -4,6 +4,21 @@ const documentService = require('../services/documentService');
 const redisService = require('../services/redisService');
 
 class ApiController {
+    async getSubmissions(req, res) {
+        try {
+            const { email } = req.query;
+            if (!email) {
+                return res.status(400).json({ error: 'Email is required' });
+            }
+
+            const submissions = await redisService.getAllUserDocuments(email);
+            res.json({ submissions });
+        } catch (error) {
+            console.error('Error in getSubmissions:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
     async getData(req, res) {
         try {
             const { documentId } = req.query;

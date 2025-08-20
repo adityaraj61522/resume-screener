@@ -1,3 +1,24 @@
+interface ResumeAnalysis {
+    name: string;
+    phone: string;
+    email: string;
+    skills: string[];
+    rank: {
+        score: number;
+        matches: string[];
+        gaps: string[];
+    };
+    experience: number;
+    projects: string[];
+    sector: string;
+    links: {
+        github?: string;
+        linkedin?: string;
+        portfolio?: string;
+        other?: string[];
+    };
+}
+
 export interface JobApplication {
     id: string;
     fullName: string;
@@ -10,6 +31,7 @@ export interface JobApplication {
     status: 'pending' | 'processing' | 'completed' | 'error';
     timestamp: string;
     processId?: string;
+    analysis?: ResumeAnalysis;
 }
 
 export interface ParticleConfig {

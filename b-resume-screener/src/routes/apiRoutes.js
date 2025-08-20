@@ -18,26 +18,28 @@ function requestLogger(req, res, next) {
 }
 
 function setApiRoutes(app) {
+    // Mount the router at /api
+    app.use('/api', router);
+
     router.use(requestLogger);
 
-    router.get('/api/data',
-        (req, res, next) => {
-            console.log('Processing GET request for document retrieval');
-            next();
-        },
-        apiController.getData.bind(apiController)
-    );
+    // Routes now don't need /api prefix since we mounted the router at /api
+    router.get('/submissions', (req, res, next) => {
+        console.log('Processing GET request for user submissions');
+        next();
+    }, apiController.getSubmissions.bind(apiController));
 
-    router.post('/api/data',
-        (req, res, next) => {
-            console.log('Processing POST request for document upload');
-            next();
-        },
-        apiController.postData.bind(apiController)
-    );
+    router.get('/data', (req, res, next) => {
+        console.log('Processing GET request for document retrieval');
+        next();
+    }, apiController.getData.bind(apiController));
+
+    router.post('/data', (req, res, next) => {
+        console.log('Processing POST request for document upload');
+        next();
+    }, apiController.postData.bind(apiController));
 
     router.use(errorHandler);
-    app.use(router);
 
     console.log('API routes configured successfully');
 }

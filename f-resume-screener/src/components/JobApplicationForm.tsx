@@ -68,9 +68,9 @@ const JobApplicationForm = () => {
                 processId: data.processId,
             };
 
-            // Store in session storage
             const submissions = JSON.parse(sessionStorage.getItem('submissions') || '[]');
             sessionStorage.setItem('submissions', JSON.stringify([newSubmission, ...submissions]));
+            localStorage.setItem('userEmail', formData.email); // Store email in localStorage
 
             toast.success('Application submitted successfully!');
             setFormData({ fullName: '', email: '', jobDescription: '' });
@@ -87,7 +87,7 @@ const JobApplicationForm = () => {
             <div className="flex items-center space-x-2 mb-6">
                 <FileText className="w-6 h-6 text-primary" />
                 <h2 className="text-2xl font-semibold bg-gradient-primary text-transparent bg-clip-text">
-                    Job Application
+                    Make Work Easier
                 </h2>
             </div>
 
